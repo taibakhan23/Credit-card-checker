@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Card Validator</title>
+    <title>Hacker-Style Credit Card Validator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <div class="container">
-        <h1>Credit Card Validator</h1>
-        <p>Enter your credit card number to check if it is valid.</p>
-        
+        <h1 class="hacker-title">HACKER-STYLE CREDIT CARD CHECKER</h1>
+        <p class="subheading">Check if your credit card numbers are valid using the Luhn Algorithm.</p>
+
         <form id="cardForm">
-            <label for="cardNumber">Credit Card Number:</label>
-            <input type="text" id="cardNumber" placeholder="Enter card number" required>
-            <button type="submit">Validate</button>
+            <label for="cardNumber" class="input-label">Enter Credit Card Numbers (one per line):</label>
+            <textarea id="cardNumber" placeholder="Enter credit card numbers here..." required></textarea>
+
+            <button type="submit" class="submit-btn">Validate Cards</button>
         </form>
 
         <div id="result" class="result"></div>
