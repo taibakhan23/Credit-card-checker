@@ -1,8 +1,14 @@
-// Luhn Algorithm to validate card number
-function validateCardNumber(cardNumber) {
-    const regex = /^[0-9]{13,19}$/; // Check if the card number is valid (only digits, length between 13-19)
-    if (!regex.test(cardNumber)) return false;
+// Function to generate a random card number using the Luhn Algorithm
+function generateCardNumber() {
+    const prefix = '4'; // Prefix for Visa card (can be adjusted for MasterCard, etc.)
+    let cardNumber = prefix;
 
+    // Generate the first 15 digits of the card number
+    for (let i = 0; i < 15; i++) {
+        cardNumber += Math.floor(Math.random() * 10);
+    }
+
+    // Apply Luhn Algorithm to generate the last digit (checksum)
     let sum = 0;
     let shouldDouble = false;
 
@@ -19,34 +25,24 @@ function validateCardNumber(cardNumber) {
         shouldDouble = !shouldDouble;
     }
 
-    return sum % 10 === 0;
+    const checksum = (10 - (sum % 10)) % 10;
+    cardNumber += checksum;
+
+    return cardNumber;
 }
 
-document.getElementById("cardForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    const cardNumbers = document.getElementById("cardNumber").value.split('\n');
-    const resultDiv = document.getElementById("result");
-
-    let resultHTML = '';
-
-    // Loop through all card numbers and check each
-    cardNumbers.forEach(cardNumber => {
-        cardNumber = cardNumber.trim(); // Remove extra spaces
-        if (cardNumber === '') return; // Skip empty lines
-
-        const isValid = validateCardNumber(cardNumber);
-
-        if (isValid) {
-            resultHTML += `<p class="valid">Valid Card: ${cardNumber}</p>`;
-        } else {
-            resultHTML += `<p class="invalid">Invalid Card: ${cardNumber}</p>`;
-        }
-    });
-
-    if (resultHTML === '') {
-        resultDiv.innerHTML = '<p>No card numbers were entered. Please try again.</p>';
-    } else {
-        resultDiv.innerHTML = resultHTML;
+// Function to generate 50 card numbers and display them
+function generateMultipleCards() {
+    let cardsListHTML = '';
+    for (let i = 0; i < 50; i++) {
+        const cardNumber = generateCardNumber();
+        cardsListHTML += `<div class="card-item">Card ${i + 1}: ${cardNumber}</div>`;
     }
+
+    document.getElementById("cardsList").innerHTML = cardsListHTML;
+}
+
+// Event listener for the "Generate" button
+document.getElementById("generateBtn").addEventListener("click", function() {
+    generateMultipleCards();
 });
