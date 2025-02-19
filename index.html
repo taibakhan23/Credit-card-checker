@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker-Style Credit Card Validator</title>
+    <title>Bulk Credit Card Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1 class="hacker-title">HACKER-STYLE CREDIT CARD CHECKER</h1>
-        <p class="subheading">Check if your credit card numbers are valid using the Luhn Algorithm.</p>
+        <h1 class="header">Bulk Credit Card Generator</h1>
+        <p class="subheading">Generate 50 fake credit card numbers at once for testing and educational purposes.</p>
 
-        <form id="cardForm">
-            <label for="cardNumber" class="input-label">Enter Credit Card Numbers (one per line):</label>
-            <textarea id="cardNumber" placeholder="Enter credit card numbers here..." required></textarea>
+        <div class="form-container">
+            <button id="generateBtn">Generate 50 Card Numbers</button>
+            <div id="cardsList"></div>
+        </div>
 
-            <button type="submit" class="submit-btn">Validate Cards</button>
-        </form>
-
-        <div id="result" class="result"></div>
+        <footer>
+            <p>For educational and testing purposes only. Not valid for real transactions.</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
