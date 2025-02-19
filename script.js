@@ -25,14 +25,28 @@ function validateCardNumber(cardNumber) {
 document.getElementById("cardForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const cardNumber = document.getElementById("cardNumber").value;
-    const result = document.getElementById("result");
+    const cardNumbers = document.getElementById("cardNumber").value.split('\n');
+    const resultDiv = document.getElementById("result");
 
-    if (validateCardNumber(cardNumber)) {
-        result.textContent = "Valid Credit Card Number!";
-        result.style.color = "green";
+    let resultHTML = '';
+
+    // Loop through all card numbers and check each
+    cardNumbers.forEach(cardNumber => {
+        cardNumber = cardNumber.trim(); // Remove extra spaces
+        if (cardNumber === '') return; // Skip empty lines
+
+        const isValid = validateCardNumber(cardNumber);
+
+        if (isValid) {
+            resultHTML += `<p class="valid">Valid Card: ${cardNumber}</p>`;
+        } else {
+            resultHTML += `<p class="invalid">Invalid Card: ${cardNumber}</p>`;
+        }
+    });
+
+    if (resultHTML === '') {
+        resultDiv.innerHTML = '<p>No card numbers were entered. Please try again.</p>';
     } else {
-        result.textContent = "Invalid Credit Card Number.";
-        result.style.color = "red";
+        resultDiv.innerHTML = resultHTML;
     }
 });
