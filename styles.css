@@ -6,9 +6,8 @@
 
 body {
     font-family: 'Press Start 2P', monospace;
-    background-color: #000;
+    background-color: #0f0f0f;
     color: #00FF00; /* Neon Green */
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +24,7 @@ body {
     width: 400px;
 }
 
-h1.hacker-title {
+h1.header {
     font-size: 2.5em;
     color: #00FF00;
     text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
@@ -35,48 +34,44 @@ h1.hacker-title {
 .subheading {
     font-size: 1.2em;
     margin-bottom: 20px;
+    color: #ccc;
 }
 
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    font-size: 1.2em;
-    color: #00FF00;
-    background-color: #000;
-    border: 2px solid #00FF00;
-    border-radius: 5px;
+.form-container {
     margin-bottom: 20px;
 }
 
-button.submit-btn {
+button {
     padding: 15px;
     background-color: #00FF00;
     color: #000;
-    border: 1px solid #00FF00;
+    border: none;
     font-size: 1.2em;
     width: 100%;
     cursor: pointer;
     border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
-button.submit-btn:hover {
+button:hover {
     background-color: #00cc00;
-    color: #000;
 }
 
-.result {
-    font-size: 1.5em;
+#cardsList {
     margin-top: 20px;
+}
+
+.card-item {
+    background-color: #333;
+    color: #00FF00;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
     text-align: left;
-    word-wrap: break-word;
 }
 
-.result .valid {
-    color: green;
+footer {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-top: 20px;
 }
-
-.result .invalid {
-    color: red;
-}
-
