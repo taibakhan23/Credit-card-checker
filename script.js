@@ -1,40 +1,31 @@
 async function sendMessage() {
-    let inputField = document.getElementById("user-input");
-    let message = inputField.value.trim();
-    if (message === "") return;
-
+    let userInput = document.getElementById("user-input").value;
     let chatBox = document.getElementById("chat-box");
-    let userMessage = `<p><strong>You:</strong> ${message}</p>`;
-    chatBox.innerHTML += userMessage;
-    inputField.value = "";
+
+    // Display user message
+    chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+    document.getElementById("user-input").value = ""; // Clear input field
 
     // Call Gemini API
-    let botReply = await getGeminiResponse(message);
-    let botMessage = `<p><strong>Bot:</strong> ${botReply}</p>`;
-    chatBox.innerHTML += botMessage;
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// Function to send user input to Gemini API and get a response
-async function getGeminiResponse(userMessage) {
-    const API_KEY = "AIzaSyABYyHWbk9ZrcLxQuXGe4A0Uu03VmxQv1Y";  // Replace with your actual key
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateText?key=${API_KEY}`;
-
-    const requestBody = {
-        prompt: { text: userMessage },
-    };
-
     try {
-        let response = await fetch(API_URL, {
+        let response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAdF1WjFpPlMtG66ocCqYLiX6_vCUwso_k", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ contents: [{ parts: [{ text: userInput }] }] })
         });
 
         let data = await response.json();
-        return data.candidates?.[0]?.output || "Sorry, I couldn't understand that.";
+        
+        // Get the bot's response from the API response
+        let botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't understand that.";
+
+        // Display bot response
+        chatBox.innerHTML += `<p><strong>Bot:</strong> ${botReply}</p>`;
+
     } catch (error) {
         console.error("Error:", error);
-        return "Error connecting to AI.";
+        chatBox.innerHTML += `<p><strong>Bot:</strong> Error connecting to AI.</p>`;
     }
 }
