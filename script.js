@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyAdF1WjFpPlMtG66ocCqYLiX6_vCUwso_kAIzaSyAdF1WjFpPlMtG66ocCqYLiX6_vCUwso_k";  // ⚠️ Replace with your real API key
+const API_KEY = "AIzaSyAQX0DHsYAInhMbgaDgo9IZMKcvGAMgTlM";  // ⚠️ Replace with your real API key
 
 // Function to generate text or images
 async function chatWithGemini(userMessage) {
