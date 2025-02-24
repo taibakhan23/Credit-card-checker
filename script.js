@@ -1,54 +1,61 @@
-const API_KEY = "AIzaSyA9Tk1BAH923newpPOXhzsl0vYUJxz4TSQ"; // Your API Key
-
 document.addEventListener("DOMContentLoaded", function () {
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
-    const sendButton = document.getElementById("send-btn");
+    const sendBtn = document.getElementById("send-btn");
 
-    sendButton.addEventListener("click", function () {
-        const userMessage = userInput.value.trim();
-        if (userMessage !== "") {
-            appendMessage("You", userMessage);
-            userInput.value = "";
-            getBotResponse(userMessage);
-        }
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") sendMessage();
     });
 
+    function sendMessage() {
+        let message = userInput.value.trim();
+        if (message === "") return;
+
+        // Show user message
+        appendMessage("You", message);
+
+        // Clear input field
+        userInput.value = "";
+
+        // Send message to AI chatbot (using your API key)
+        fetchChatbotResponse(message);
+    }
+
     function appendMessage(sender, message) {
-        const messageElement = document.createElement("p");
-        messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
-        chatBox.appendChild(messageElement);
+        let messageDiv = document.createElement("div");
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatBox.appendChild(messageDiv);
+
+        // Scroll to the bottom
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    async function getBotResponse(message) {
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateMessage?key=${API_KEY}`;
+    function fetchChatbotResponse(userMessage) {
+        const apiKey = "AIzaSyA9Tk1BAH923newpPOXhzsl0vYUJxz4TSQ";  
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
         const requestBody = {
-            prompt: {
-                text: message
-            }
+            contents: [{ parts: [{ text: userMessage }] }]
         };
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestBody)
-            });
-
-            const data = await response.json();
-
-            if (data.candidates && data.candidates.length > 0) {
-                appendMessage("Bot", data.candidates[0].content);
+        fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.candidates) {
+                const botReply = data.candidates[0].content.parts[0].text;
+                appendMessage("BOT", botReply);
             } else {
-                appendMessage("Bot", "Sorry, I couldn't understand that.");
+                appendMessage("BOT", "Sorry, I didn't understand that.");
             }
-        } catch (error) {
-            appendMessage("Bot", "Error fetching response.");
+        })
+        .catch(error => {
             console.error("Error:", error);
-        }
+            appendMessage("BOT", "Error connecting to AI.");
+        });
     }
 });
