@@ -1,62 +1,54 @@
-const API_KEY = "AIzaSyAQX0DHsYAInhMbgaDgo9IZMKcvGAMgTlM";  // ⚠️ Replace with your real API key
+const API_KEY = "AIzaSyA9Tk1BAH923newpPOXhzsl0vYUJxz4TSQ"; // Your API Key
 
-// Function to generate text or images
-async function chatWithGemini(userMessage) {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            contents: [{ parts: [{ text: userMessage }] }]
-        })
+document.addEventListener("DOMContentLoaded", function () {
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendButton = document.getElementById("send-btn");
+
+    sendButton.addEventListener("click", function () {
+        const userMessage = userInput.value.trim();
+        if (userMessage !== "") {
+            appendMessage("You", userMessage);
+            userInput.value = "";
+            getBotResponse(userMessage);
+        }
     });
 
-    const data = await response.json();
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement("p");
+        messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-    if (data.candidates && data.candidates.length > 0) {
-        const reply = data.candidates[0].content.parts[0];
+    async function getBotResponse(message) {
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateMessage?key=${API_KEY}`;
 
-        // If the response is an image, return the image URL
-        if (reply.inlineData) {
-            return { type: "image", url: `data:image/png;base64,${reply.inlineData.data}` };
+        const requestBody = {
+            prompt: {
+                text: message
+            }
+        };
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json();
+
+            if (data.candidates && data.candidates.length > 0) {
+                appendMessage("Bot", data.candidates[0].content);
+            } else {
+                appendMessage("Bot", "Sorry, I couldn't understand that.");
+            }
+        } catch (error) {
+            appendMessage("Bot", "Error fetching response.");
+            console.error("Error:", error);
         }
-
-        // Otherwise, return text
-        return { type: "text", text: reply.text };
-    } else {
-        return { type: "text", text: "Sorry, I couldn't understand that." };
-    }
-}
-
-// Function to display messages or images in chat UI
-function appendMessage(sender, messageObj) {
-    const chatOutput = document.getElementById("chatOutput");
-    const messageElement = document.createElement("p");
-
-    if (messageObj.type === "text") {
-        messageElement.innerHTML = `<b>${sender}:</b> ${messageObj.text}`;
-    } else if (messageObj.type === "image") {
-        messageElement.innerHTML = `<b>${sender}:</b><br><img src="${messageObj.url}" style="max-width: 100%; border-radius: 8px;">`;
-    }
-
-    chatOutput.appendChild(messageElement);
-    chatOutput.scrollTop = chatOutput.scrollHeight;
-}
-
-// Event listener for send button
-document.getElementById("sendButton").addEventListener("click", async () => {
-    const userInput = document.getElementById("chatInput").value.trim();
-    if (userInput === "") return;
-
-    appendMessage("You", { type: "text", text: userInput });
-    document.getElementById("chatInput").value = "";
-
-    const botReply = await chatWithGemini(userInput);
-    appendMessage("Bot", botReply);
-});
-
-// Allow Enter key to send messages
-document.getElementById("chatInput").addEventListener("keypress", (event) => {
-    if (event.key === "Enter") {
-        document.getElementById("sendButton").click();
     }
 });
